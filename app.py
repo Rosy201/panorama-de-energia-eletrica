@@ -6,8 +6,6 @@ import plotly.express as px
 df = pd.read_csv('consumo_energia.csv', skiprows=1)  # pular a primeira linha de cabeçalho extra
 
 # Pré-processamento: remover colunas e linhas vazias e organizar dados
-
-# Exemplo de limpeza básica: remover colunas com "Unnamed" e linhas vazias
 df = df.loc[:, ~df.columns.str.contains('Unnamed')]
 df = df.dropna(how='all')
 
