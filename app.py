@@ -1,15 +1,15 @@
 from dash import Dash, html, dcc
-from subtemas import consumo_temporal
+from subtemas import layout_consumo_temporal, register_consumo_temporal
 
 app = Dash(__name__)
 
 app.layout = html.Div([
     dcc.Tabs([
-        dcc.Tab(label="Consumo por Região", children=[consumo_temporal.layout]),
+        dcc.Tab(label="Consumo de Energia Anual por Região e Mês", children=[layout_consumo_temporal]),
     ])
 ])
 
-consumo_temporal.register_callbacks(app)
+register_consumo_temporal(app)
 
 if __name__ == "__main__":
     app.run(debug=True)
