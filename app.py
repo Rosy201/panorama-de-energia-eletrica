@@ -2,60 +2,57 @@ import pandas as pd
 from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 
-# Leitura do CSV (ajuste o caminho conforme o seu arquivo)
-df = pd.read_csv('consumo_energia.csv', skiprows=1)  # pular a primeira linha de cabeçalho extra
+df = pd.read_csv("Data/consumo_energia_mes_ano.csv")
 
-# Pré-processamento: remover colunas e linhas vazias e organizar dados
-df = df.loc[:, ~df.columns.str.contains('Unnamed')]
-df = df.dropna(how='all')
-
-# Transformar o dataframe para o formato longo (melt)
-df_long = df.melt(id_vars=['Região'], var_name='Mês', value_name='Consumo')
-
-# Criar coluna Ano (por enquanto só vamos assumir 2025 para simplificar)
-df_long['Ano'] = 2025  # Você pode ajustar para ler o ano dinamicamente se tiver
-
-# Criar coluna Data (data real) juntando Ano e Mês
-# Corrigir meses abreviados para números:
-meses = {
-    'JAN': 1, 'FEV': 2, 'MAR': 3, 'ABR': 4, 'MAI': 5, 'JUN': 6,
-    'JUL': 7, 'AGO': 8, 'SET': 9, 'OUT': 10, 'NOV': 11, 'DEZ': 12
-}
-df_long['Mês_Num'] = df_long['Mês'].map(meses)
-df_long = df_long.dropna(subset=['Mês_Num'])  # remove linhas que não tinham mês válido
-df_long['Data'] = pd.to_datetime(dict(year=df_long['Ano'], month=df_long['Mês_Num'], day=1))
-
-# Converter consumo para número (remover possíveis erros)
-df_long['Consumo'] = pd.to_numeric(df_long['Consumo'], errors='coerce')
-
-# Inicializar app Dash
 app = Dash(__name__)
 
+anos = sorted(df["Ano"].unique())
+
 app.layout = html.Div([
-    html.H1("Evolução do Consumo de Energia no Brasil"),
-    dcc.Dropdown(
-        id='regiao-dropdown',
-        options=[{'label': r, 'value': r} for r in df_long['Região'].unique()],
-        value='TOTAL BRASIL'  # valor padrão
+    html.H2("Consumo de Energia Anual por Região e Mês"),
+    
+    # Slider para selecionar o ano
+    dcc.Slider(
+        id="ano-slider",
+        min=anos[0],
+        max=anos[-1],
+        step=1,
+        marks={ano: str(ano) for ano in anos},
+        value=anos[-1],  # ano padrão (mais recente)
+        tooltip={"placement": "bottom", "always_visible": True}
     ),
-    dcc.Graph(id='linha-temporal')
+    
+    dcc.Graph(id="grafico-barras"),
+    
+    html.Div(id="tabela")
 ])
 
 @app.callback(
-    Output('linha-temporal', 'figure'),
-    Input('regiao-dropdown', 'value')
+    Output("grafico-barras", "figure"),
+    Output("tabela", "children"),
+    Input("ano-slider", "value")
 )
-def atualizar_grafico(regiao_selecionada):
-    df_filtrado = df_long[df_long['Região'] == regiao_selecionada]
-    fig = px.line(
-        df_filtrado,
-        x='Data',
-        y='Consumo',
-        title=f'Consumo mensal de energia - {regiao_selecionada}',
-        labels={'Consumo': 'Consumo (MWh)', 'Data': 'Data'}
-    )
-    fig.update_layout(xaxis=dict(dtick="M1", tickformat="%b %Y"))
-    return fig
+def atualiza_dashboard(ano_selecionado):
+    df_filtrado = df[df["Ano"] == ano_selecionado]
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+    fig = px.bar(
+        df_filtrado,
+        x="Região",
+        y="Valor",
+        color="Mês",
+        barmode="group",
+        title=f"Consumo de Energia em {ano_selecionado}"
+    )
+
+    tabela_html = html.Table([
+        html.Thead([html.Tr([html.Th(c) for c in df_filtrado.columns])]),
+        html.Tbody([
+            html.Tr([html.Td(df_filtrado.iloc[i][c]) for c in df_filtrado.columns])
+            for i in range(min(len(df_filtrado), 20))
+        ])
+    ])
+
+    return fig, tabela_html
+
+if __name__ == "__main__":
+    app.run(debug=True)
