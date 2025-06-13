@@ -69,7 +69,10 @@ def register_callbacks(app):
         fig.update_layout(
             title=f"Consumo Total de Energia por Estado - {ano}",
             geo=dict(showframe=False, showcoastlines=False),
-            template="plotly_white"
+            template="plotly_white",
+            width=1000,
+            height=700
         )
+
 
         return fig
