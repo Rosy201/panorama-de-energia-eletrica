@@ -1,31 +1,51 @@
-# panorama-de-energia-eletrica
+# 🔌 Panorama da Energia Elétrica no Brasil
 
-# Evolução do Consumo de Energia no Brasil (2004–2021)
+Este dashboard interativo apresenta uma análise visual da evolução do consumo e da geração de energia elétrica no Brasil entre 2004 e 2025, com recortes por região, setor econômico e tipo de fonte energética. A ferramenta foi desenvolvida como parte do projeto final da disciplina **Visualização de Dados**, do curso de **Análise e Desenvolvimento de Sistemas** da **Unichristus**.
 
-Este dashboard interativo apresenta a evolução do consumo mensal de energia elétrica no Brasil, com recorte por **região geográfica**, no período de **2004 a 2021**. Os dados foram obtidos da Empresa de Pesquisa Energética (EPE), disponíveis publicamente no portal oficial:
+---
 
-🔗 [Consumo de Energia Elétrica - EPE](https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/consumo-de-energia-eletrica?utm_source=chatgpt.com)
+## 📊 Visões Disponíveis no Dashboard
 
-## 📊 Sobre os dados
+1. **Consumo de Energia por Região e Mês**  
+   Visualização em gráfico de barras agrupadas, com slider de ano, permitindo comparar o consumo de energia entre as regiões do Brasil ao longo do tempo.
 
-A fonte contém uma base extensa de consumo de energia por diversos critérios. Para este projeto, utilizei **apenas os dados de consumo total por região**, desconsiderando os valores:
+2. **Consumo de Energia por Setor Econômico**  
+   Permite explorar como diferentes setores (residencial, industrial, comercial, etc.) consomem energia, com dados mensais por estado e filtros dinâmicos.
 
-- **do total Brasil**
-- **por subsistemas**
+3. **Geração de Energia por Fonte (Matriz Energética)**  
+   Exibe a participação de cada tipo de fonte (hidrelétrica, eólica, solar, etc.) na matriz energética brasileira, com foco na transição para fontes renováveis.
 
-A visualização permite observar variações sazonais e comparações entre regiões ao longo dos anos.
+4. **Consumo por Estado (Mapa de Calor)**  
+   Um mapa coroplético interativo mostra o consumo energético por estado brasileiro, permitindo visualizar as diferenças regionais mês a mês.
+
+---
+
+## 🔗 Fontes de Dados
+
+- **Subtema 1, 2 e 4 (Consumo por Região, por Setor Econômico e Consumo por Estado)**:  
+  [Empresa de Pesquisa Energética - Consumo de Energia Elétrica](https://www.epe.gov.br/pt/publicacoes-dados-abertos/publicacoes/consumo-de-energia-eletrica?utm_source=chatgpt.com)
+
+- **Subtema 3 (Geração de Energia por Fonte)**:  
+  [Kaggle - Renewable Energy Dataset](https://www.kaggle.com/datasets/programmerrdai/renewable-energy/data)
+
+---
 
 ## ⚙️ Tecnologias Utilizadas
 
-- Python + Dash (Plotly)
+- Python 3.11+
+- Dash (Plotly)
 - Pandas
-- Plotly Express
+- Dash Bootstrap Components
 
-## 📈 Funcionalidades
+---
 
-- Visualização por **gráfico de barras** agrupado por mês e região
-- **Slider de ano** para navegação dinâmica
-- Atualização automática do gráfico conforme seleção
+## 💡 Funcionalidades e Interatividade
+
+- Visualizações interativas com filtros e sliders
+- Múltiplos gráficos (barra, linha, área empilhada, mapa)
+- Layout com abas e design responsivo com Bootstrap
+- Estrutura modularizada por subtema (`/subtemas`)
+- Navegação clara e performance fluida
 
 ---
 
